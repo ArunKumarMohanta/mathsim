@@ -1,16 +1,96 @@
-# React + Vite
+🧮 MathSim: Interactive Engineering Algorithms
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MathSim is a high-performance, interactive mathematical simulation dashboard built with React. It visualizes complex numerical methods and statistical theorems in real-time, designed to demonstrate production-grade software engineering practices including multithreading, custom state management, and test-driven development.
 
-Currently, two official plugins are available:
+✨ Core Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The application is divided into three primary modules, each solving a distinct mathematical problem:
 
-## React Compiler
+1. Trapezoidal Rule Approximation (Numerical Integration)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Dynamic Parsing: Users can input any mathematical function as a string (e.g., x^2 - 4, sin(x) * 2). The app safely compiles and evaluates this in real-time using mathjs.
 
-## Expanding the ESLint configuration
+Geometrical Visualization: Visualizes how continuous integration is approximated using discrete linear trapezoids.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Real-time Error Mapping: As the user increases the interval slider, the UI dynamically recalculates and re-renders the area approximation instantly using Recharts.
+
+2. Newton-Raphson Root Finding
+
+Algorithmic Convergence: An interactive demonstration of iterative root-finding.
+
+Automatic Differentiation: Leverages mathjs to automatically compute the derivative of the user's custom input function in the background.
+
+Defensive Programming: Implements strict error boundaries to catch mathematical divergence (e.g., division by zero when the tangent slope is perfectly flat) without crashing the React UI.
+
+3. Central Limit Theorem (High-Performance Monte Carlo)
+
+Background Multithreading: Proves that the sum of independent random variables tends toward a normal distribution by simulating hundreds of thousands of dice rolls.
+
+Web Worker Implementation: Generates up to 500,000 samples (millions of arithmetic operations) via a dedicated Web Worker thread. This ensures the browser's main UI thread never freezes, maintaining a silky smooth 60fps experience even during heavy computation.
+
+🏗️ Architectural Highlights
+
+This project was built with a strict separation of concerns, simulating an enterprise-level frontend architecture:
+
+Pure Mathematical Engine: All core logic (mathEngine.js) is decoupled from the UI, allowing it to be rigorously unit-tested in isolation.
+
+Test-Driven Development (TDD): Business logic is backed by a Vitest testing suite to guarantee mathematical accuracy and graceful failure handling.
+
+Custom React Hooks: Complex state logic, mathjs parsing, and Web Worker lifecycles are abstracted into custom hooks (useIntegration.js, useRootFinding.js, useCLT.js), keeping the main dashboard UI declarative and clean.
+
+Optimized Rendering: Uses useMemo and useCallback to prevent unnecessary re-renders when generating massive geometric chart datasets.
+
+🚀 Getting Started
+
+To run this project locally, follow these steps:
+
+Prerequisites
+
+Node.js (v18 or higher)
+
+npm or yarn
+
+Installation
+
+Clone the repository:
+
+git clone [https://github.com/yourusername/mathsim.git](https://github.com/yourusername/mathsim.git)
+cd mathsim
+
+
+Install dependencies:
+
+npm install
+
+
+Start the Vite development server:
+
+npm run dev
+
+
+Open your browser and navigate to http://localhost:5173.
+
+🧪 Testing
+
+This project uses Vitest for unit testing the core mathematical engine. To run the test suite:
+
+npm run test
+
+
+🛠️ Tech Stack
+
+Frontend Framework: React 18
+
+Build Tool: Vite
+
+Styling: Tailwind CSS v4
+
+Data Visualization: Recharts
+
+Math Parsing: Math.js
+
+Testing: Vitest
+
+Icons: Lucide React
+
+Designed and engineered as a showcase of modern JavaScript capabilities and robust frontend architecture.
