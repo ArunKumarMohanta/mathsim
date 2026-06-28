@@ -1,46 +1,53 @@
 import { useState, useMemo } from 'react';
-import { calculateTrapezoidalArea, functionsMap } from '../utils/mathEngine';
+import { calculateTrapezoidalArea } from '../utils/mathEngine';
+import * as math from 'mathjs';
 
 export const useIntegration = () => {
   const [intervals, setIntervals] = useState(4);
-  const [functionType, setFunctionType] = useState('parabola');
+  const [functionString, setFunctionString] = useState('x^2');
+  const [error, setError] = useState(null);
   
-  // Fixed bounds for our visualization
   const a = 0; 
   const b = 4; 
 
-  // useMemo ensures we only recalculate when intervals or functionType change
-  const { area, chartData } = useMemo(() => {
-    const f = functionsMap[functionType];
-    const calculatedArea = calculateTrapezoidalArea(f, a, b, intervals);
-    
-    // Generate the geometric data points for the Recharts graph
-    const data = [];
-    const steps = 40; // High resolution for the smooth true curve
-    const stepSize = (b - a) / steps;
-    const h = (b - a) / intervals; // Width of one trapezoid
+  const { area, chartData, currentError } = useMemo(() => {
+    try {
+      // Safely parse the user's string into an executable math function
+      const node = math.parse(functionString);
+      const code = node.compile();
+      const f = (x) => code.evaluate({ x });
 
-    for (let i = 0; i <= steps; i++) {
-      const x = a + i * stepSize;
+      const calculatedArea = calculateTrapezoidalArea(f, a, b, intervals);
       
-      // Calculate where the straight line of the trapezoid should be at this exact X coordinate
-      const currentIntervalIdx = Math.min(Math.floor((x - a) / h), intervals - 1);
-      const xLeft = a + currentIntervalIdx * h;
-      const xRight = xLeft + h;
-      const yLeft = f(xLeft);
-      const yRight = f(xRight);
-      
-      const trapezoidY = yLeft + ((yRight - yLeft) / (xRight - xLeft)) * (x - xLeft);
+      const data = [];
+      const steps = 40; 
+      const stepSize = (b - a) / steps;
+      const h = (b - a) / intervals; 
 
-      data.push({
-        x: parseFloat(x.toFixed(2)),
-        'True Curve': parseFloat(f(x).toFixed(2)),
-        'Trapezoid': parseFloat(trapezoidY.toFixed(2)),
-      });
+      for (let i = 0; i <= steps; i++) {
+        const x = a + i * stepSize;
+        const currentIntervalIdx = Math.min(Math.floor((x - a) / h), intervals - 1);
+        const xLeft = a + currentIntervalIdx * h;
+        const xRight = xLeft + h;
+        const yLeft = f(xLeft);
+        const yRight = f(xRight);
+        
+        const trapezoidY = yLeft + ((yRight - yLeft) / (xRight - xLeft)) * (x - xLeft);
+
+        data.push({
+          x: parseFloat(x.toFixed(2)),
+          'True Curve': parseFloat(f(x).toFixed(2)),
+          'Trapezoid': parseFloat(trapezoidY.toFixed(2)),
+        });
+      }
+      return { area: calculatedArea.toFixed(4), chartData: data, currentError: null };
+    } catch (err) {
+      return { area: '0.0000', chartData: [], currentError: "Invalid math function. Try 'x^2' or 'sin(x)'" };
     }
+  }, [intervals, functionString]);
 
-    return { area: calculatedArea.toFixed(4), chartData: data };
-  }, [intervals, functionType]);
+  // Update error state
+  useMemo(() => setError(currentError), [currentError]);
 
-  return { intervals, setIntervals, functionType, setFunctionType, area, chartData };
+  return { intervals, setIntervals, functionString, setFunctionString, area, chartData, error };
 };

@@ -4,22 +4,22 @@ export const useCLT = () => {
   const [histogramData, setHistogramData] = useState([]);
   const [isCalculating, setIsCalculating] = useState(false);
   
-  // Keep a reference to the worker instance
+  // Add state for our new interactive sliders
+  const [sampleSize, setSampleSize] = useState(50);
+  const [numSamples, setNumSamples] = useState(100000);
+  
   const workerRef = useRef(null);
 
   useEffect(() => {
-    // Initialize the Web Worker using Vite's URL syntax
     workerRef.current = new Worker(new URL('../workers/cltWorker.js', import.meta.url), {
       type: 'module'
     });
 
-    // Listen for the completed data coming back from the worker
     workerRef.current.onmessage = (e) => {
       setHistogramData(e.data);
-      setIsCalculating(false); // Turn off the loading state
+      setIsCalculating(false); 
     };
 
-    // Cleanup function: Terminate the worker if the user leaves the page
     return () => {
       if (workerRef.current) {
         workerRef.current.terminate();
@@ -27,15 +27,22 @@ export const useCLT = () => {
     };
   }, []);
 
-  // Function exposed to our UI button to trigger the massive calculation
-  const runSimulation = useCallback((sampleSize = 50, numSamples = 100000) => {
+  // Use the state variables instead of hardcoded numbers
+  const runSimulation = useCallback(() => {
     setIsCalculating(true);
     
-    // Send the parameters to the background thread
     if (workerRef.current) {
       workerRef.current.postMessage({ sampleSize, numSamples });
     }
-  }, []);
+  }, [sampleSize, numSamples]);
 
-  return { histogramData, isCalculating, runSimulation };
+  return { 
+    histogramData, 
+    isCalculating, 
+    runSimulation, 
+    sampleSize, 
+    setSampleSize, 
+    numSamples, 
+    setNumSamples 
+  };
 };
