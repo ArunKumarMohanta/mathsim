@@ -3,11 +3,16 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, ReferenceLine, BarChart, Bar
 } from 'recharts';
-import { Calculator, TrendingDown, BarChart2, Play, AlertCircle, BookOpen, ChevronRight } from 'lucide-react';
+import { Calculator, TrendingDown, BarChart2, Play, AlertCircle } from 'lucide-react';
 
 import { useIntegration } from './hooks/useIntegration';
 import { useRootFinding } from './hooks/useRootFinding';
 import { useCLT } from './hooks/useCLT';
+
+// Import our newly refactored UI components
+import { NavItem } from './components/NavItem';
+import { Header } from './components/Header';
+import { TheoryPanel } from './components/TheoryPanel';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('integration');
@@ -44,7 +49,10 @@ export default function App() {
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <Header title="Trapezoidal Rule Approximation" desc="Type any custom math function to visualize how integration is approximated using geometry." />
               
-              <TheoryPanel title="How does this work?">
+              <TheoryPanel 
+                title="How does this work?"
+                videoUrl="https://www.youtube.com/embed/rfG8ce4nNh0"
+              >
                 Calculus lets us find the exact area under a curved line, but computers prefer simple geometry. The Trapezoidal Rule guesses the area by slicing the space into vertical strips and drawing straight lines across the top (trapezoids). Notice how the green trapezoids peek above or below the true blue curve? That's the "error". As you increase the intervals on the slider, the strips get thinner, the error shrinks, and the computer's guess matches the true exact area!
               </TheoryPanel>
 
@@ -115,7 +123,10 @@ export default function App() {
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                <Header title="Newton-Raphson Root Finding" desc="An iterative algorithm that uses tangents to find exactly where a curve crosses zero." />
               
-               <TheoryPanel title="How does this work?">
+               <TheoryPanel 
+                 title="How does this work?"
+                 videoUrl="https://www.youtube.com/embed/W7S94pq5Xuo"
+               >
                 How do computers find where a curve hits exactly zero (the "root")? They guess! Newton-Raphson starts at your "Initial Guess". It calculates the slope (tangent) at that exact point and slides down that straight line to the zero axis. It takes that new spot and repeats the process. Watch the graph—it usually only takes 4 or 5 iterations to slide right into the exact answer. But beware: if you guess a spot where the line is perfectly flat (slope = 0), it shoots off into infinity and fails!
               </TheoryPanel>
 
@@ -192,7 +203,10 @@ export default function App() {
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                <Header title="Central Limit Theorem (High-Performance)" desc="Proves that the sum of independent random variables tends toward a normal distribution." />
               
-               <TheoryPanel title="Why does this form a perfect Bell Curve?">
+               <TheoryPanel 
+                 title="Why does this form a perfect Bell Curve?"
+                 videoUrl="https://www.youtube.com/embed/zeJD6dqJ5lo"
+               >
                 The Central Limit Theorem is one of the most magical concepts in statistics. Imagine rolling dice and taking their average. Getting an average of 1 (rolling all ones) is incredibly rare. Getting an average of 3.5 (a mix of high and low numbers) is very common. Because of this, no matter how chaotic individual data points are, when you take their averages, they will <strong>always</strong> stack up in the middle to form a perfect "Bell Curve" (Normal Distribution). This simulation rolls millions of random numbers in a background thread to prove it visually!
               </TheoryPanel>
 
@@ -274,55 +288,3 @@ export default function App() {
     </div>
   );
 }
-
-// --- Reusable Micro-Components ---
-
-const NavItem = ({ active, icon, label, onClick }) => (
-  <button 
-    onClick={onClick}
-    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-      active 
-        ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-500/20' 
-        : 'text-gray-400 hover:bg-gray-800 hover:text-white border border-transparent'
-    }`}
-  >
-    {icon}
-    <span>{label}</span>
-  </button>
-);
-
-const Header = ({ title, desc }) => (
-  <div className="mb-4">
-    <h2 className="text-3xl font-bold text-white tracking-tight">{title}</h2>
-    <p className="text-gray-400 mt-2 max-w-3xl leading-relaxed">{desc}</p>
-  </div>
-);
-
-// Educational Panel Component
-const TheoryPanel = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  
-  return (
-    <div className="bg-indigo-950/30 border border-indigo-500/30 rounded-xl overflow-hidden mt-4">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-5 py-4 flex items-center justify-between text-indigo-300 hover:bg-indigo-500/10 transition-colors"
-      >
-        <div className="flex items-center gap-3 font-semibold">
-          <BookOpen size={18} />
-          {title}
-        </div>
-        <ChevronRight size={18} className={`transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
-      </button>
-      <div 
-        className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-      >
-        <div className="overflow-hidden">
-          <div className="px-5 pb-5 pt-1 text-sm text-indigo-200/80 leading-relaxed border-t border-indigo-500/10">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
