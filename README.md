@@ -1,4 +1,3 @@
-````markdown
 # 🧮 MathSim: Interactive Engineering Algorithms
 
 MathSim is a high-performance, interactive mathematical simulation dashboard built with React. It visualizes complex numerical methods and statistical theorems in real-time, designed to demonstrate production-grade software engineering practices including multithreading, custom state management, and test-driven development.
@@ -115,5 +114,4 @@ npm run test
 
 Designed and engineered as a showcase of modern JavaScript capabilities and robust frontend architecture.
 
-```
 ```
