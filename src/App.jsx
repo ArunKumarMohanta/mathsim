@@ -9,7 +9,6 @@ import { useIntegration } from './hooks/useIntegration';
 import { useRootFinding } from './hooks/useRootFinding';
 import { useCLT } from './hooks/useCLT';
 
-// Import our newly refactored UI components
 import { NavItem } from './components/NavItem';
 import { Header } from './components/Header';
 import { TheoryPanel } from './components/TheoryPanel';
@@ -22,18 +21,26 @@ export default function App() {
   const clt = useCLT();
 
   return (
-    <div className="flex h-screen bg-[#0f1117] text-gray-100 font-sans selection:bg-indigo-500/30">
+    
+    <div className="flex flex-col md:flex-row h-screen bg-[#0f1117] text-gray-100 font-sans selection:bg-indigo-500/30">
       
-      {/* SIDEBAR */}
-      <aside className="w-64 bg-[#161821] border-r border-gray-800 flex flex-col z-10 shadow-xl shrink-0">
-        <div className="p-6 border-b border-gray-800">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/20">M</div>
-            <h1 className="text-xl font-bold tracking-wide text-white">MathSim</h1>
+{/* SIDEBAR: Full width on mobile, 64-width on desktop */}
+      <aside className="w-full md:w-64 bg-[#161821] border-b md:border-b-0 md:border-r border-gray-800 flex flex-col z-10 shadow-xl shrink-0">
+        
+        {/* UPDATED HEADER SECTION */}
+        <div className="p-4 md:p-6 border-b border-gray-800 flex items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/20 shrink-0">M</div>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold tracking-wide text-white leading-none mb-1">MathSim</h1>
+              <p className="text-[10px] text-indigo-300/80 font-bold uppercase tracking-widest leading-none">Engineering Algorithms</p>
+            </div>
           </div>
-          <p className="text-xs text-gray-400 mt-2 font-medium">Engineering Algorithms</p>
         </div>
-        <nav className="flex-1 p-4 space-y-2">
+        {/* END UPDATED HEADER SECTION */}
+
+        {/* Horizontal scrolling on mobile, vertical stack on desktop */}
+        <nav className="flex-none md:flex-1 p-3 md:p-4 flex md:flex-col gap-2 overflow-x-auto">
           <NavItem active={activeTab === 'integration'} onClick={() => setActiveTab('integration')} icon={<Calculator size={18} />} label="Integration" />
           <NavItem active={activeTab === 'roots'} onClick={() => setActiveTab('roots')} icon={<TrendingDown size={18} />} label="Root Finding" />
           <NavItem active={activeTab === 'clt'} onClick={() => setActiveTab('clt')} icon={<BarChart2 size={18} />} label="Central Limit" />
@@ -41,7 +48,7 @@ export default function App() {
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 overflow-y-auto p-8 relative">
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 relative">
         <div className="max-w-6xl mx-auto space-y-6">
           
           {/* --- MODULE 1: TRAPEZOIDAL INTEGRATION --- */}
@@ -57,7 +64,7 @@ export default function App() {
               </TheoryPanel>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                <div className="bg-[#161821] p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col gap-6">
+                <div className="bg-[#161821] p-5 md:p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-300 mb-2">Custom Function f(x)</label>
                     <input 
@@ -89,8 +96,9 @@ export default function App() {
                   </div>
                 </div>
                 
-                <div className="lg:col-span-2 bg-[#161821] p-6 rounded-2xl border border-gray-800 shadow-lg h-[450px] flex flex-col">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-6">Real-Time Geometrical Mapping</h3>
+                {/* Adjusted height for mobile: h-[300px] md:h-[450px] */}
+                <div className="lg:col-span-2 bg-[#161821] p-5 md:p-6 rounded-2xl border border-gray-800 shadow-lg h-[300px] md:h-[450px] flex flex-col">
+                  <h3 className="text-sm font-semibold text-gray-400 mb-4 md:mb-6">Real-Time Geometrical Mapping</h3>
                   <div className="flex-1 min-h-0">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={integration.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -125,13 +133,13 @@ export default function App() {
               
                <TheoryPanel 
                  title="How does this work?"
-                 videoUrl="https://www.youtube.com/embed/W7S94pq5Xuo"
+                 videoUrl="https://www.youtube.com/embed/-5e2cNgSmFk"
                >
                 How do computers find where a curve hits exactly zero (the "root")? They guess! Newton-Raphson starts at your "Initial Guess". It calculates the slope (tangent) at that exact point and slides down that straight line to the zero axis. It takes that new spot and repeats the process. Watch the graph—it usually only takes 4 or 5 iterations to slide right into the exact answer. But beware: if you guess a spot where the line is perfectly flat (slope = 0), it shoots off into infinity and fails!
               </TheoryPanel>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                <div className="bg-[#161821] p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col gap-6">
+                <div className="bg-[#161821] p-5 md:p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-300 mb-2">Custom Function f(x)</label>
                     <input 
@@ -164,11 +172,11 @@ export default function App() {
                     ) : (
                       <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-800">
                         <div className="p-4 bg-[#0f1117] rounded-xl border border-gray-800 flex flex-col items-center justify-center">
-                          <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1 font-bold">Root Found</div>
+                          <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1 font-bold text-center">Root Found</div>
                           <div className="text-xl font-mono font-bold text-amber-400">{rootFinding.root}</div>
                         </div>
                         <div className="p-4 bg-[#0f1117] rounded-xl border border-gray-800 flex flex-col items-center justify-center">
-                          <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1 font-bold">Iterations</div>
+                          <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1 font-bold text-center">Iterations</div>
                           <div className="text-xl font-mono font-bold text-white">{rootFinding.iterations}</div>
                         </div>
                       </div>
@@ -176,8 +184,9 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-2 bg-[#161821] p-6 rounded-2xl border border-gray-800 shadow-lg h-[450px] flex flex-col">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-6">Algorithm Convergence</h3>
+                {/* Adjusted height for mobile: h-[300px] md:h-[450px] */}
+                <div className="lg:col-span-2 bg-[#161821] p-5 md:p-6 rounded-2xl border border-gray-800 shadow-lg h-[300px] md:h-[450px] flex flex-col">
+                  <h3 className="text-sm font-semibold text-gray-400 mb-4 md:mb-6">Algorithm Convergence</h3>
                   <div className="flex-1 min-h-0">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={rootFinding.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -213,10 +222,10 @@ export default function App() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
                 
                 {/* INTERACTIVE CONTROLS FOR CLT */}
-                <div className="bg-[#161821] p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col gap-6">
+                <div className="bg-[#161821] p-5 md:p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col gap-6">
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-semibold text-gray-300">Sample Size (Dice per roll)</label>
+                      <label className="text-sm font-semibold text-gray-300">Sample Size</label>
                       <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-md font-mono font-bold">{clt.sampleSize}</span>
                     </div>
                     <input 
@@ -228,7 +237,7 @@ export default function App() {
                   </div>
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-semibold text-gray-300">Total Samples (Rolls)</label>
+                      <label className="text-sm font-semibold text-gray-300">Total Samples</label>
                       <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-md font-mono font-bold">{clt.numSamples.toLocaleString()}</span>
                     </div>
                     <input 
@@ -257,9 +266,9 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* GRAPH PANEL */}
-                <div className="lg:col-span-2 bg-[#161821] p-6 rounded-2xl border border-gray-800 shadow-lg h-[450px] flex flex-col">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-6">Simulation Distribution</h3>
+                {/* Adjusted height for mobile: h-[300px] md:h-[450px] */}
+                <div className="lg:col-span-2 bg-[#161821] p-5 md:p-6 rounded-2xl border border-gray-800 shadow-lg h-[300px] md:h-[450px] flex flex-col">
+                  <h3 className="text-sm font-semibold text-gray-400 mb-4 md:mb-6">Simulation Distribution</h3>
                   <div className="flex-1 min-h-0">
                     {clt.histogramData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
@@ -272,9 +281,9 @@ export default function App() {
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
-                      <div className="h-full flex flex-col items-center justify-center text-gray-500 border-2 border-dashed border-gray-800 rounded-xl">
+                      <div className="h-full flex flex-col items-center justify-center text-gray-500 border-2 border-dashed border-gray-800 rounded-xl text-center p-4">
                         <BarChart2 size={48} className="mb-4 opacity-50" />
-                        <p>Adjust parameters and click Run Simulation.</p>
+                        <p className="text-sm">Adjust parameters and click Run Simulation.</p>
                       </div>
                     )}
                   </div>
